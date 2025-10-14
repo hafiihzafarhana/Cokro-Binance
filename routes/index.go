@@ -19,6 +19,8 @@ func MarketRoutes(app *fiber.App, handler market.MarketControllerInterface) {
 	marketGroup := app.Group("/market")
 	marketGroup.Get("/order-book", handler.CheckOrderBook)
 	marketGroup.Get("/recent-trade-lists", handler.CheckRecentTradeList)
+	marketGroup.Get("/old-trade-lookup", handler.CheckOldTradeLookup)
+	marketGroup.Get("/agregate-trade-lists", handler.CheckAgregateTradeList)
 }
 func TradingRoutes(app *fiber.App) {
 	tradingGroup := app.Group("/trading")

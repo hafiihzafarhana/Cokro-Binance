@@ -16,6 +16,13 @@ func NewGeneralController(generalService general.GeneralServiceInterface) genera
 	}
 }
 
+// CheckServerTime godoc
+// @Summary Check server time
+// @Description Check server time from Binance API
+// @Tags General
+// @Accept json
+// @Produce json
+// @Router /general/server-time [get]
 func (g *GeneralController) CheckServerTime(c *fiber.Ctx) error {
 	data, err := g.GeneralService.GetBinanceServerTime()
 	if err != nil {

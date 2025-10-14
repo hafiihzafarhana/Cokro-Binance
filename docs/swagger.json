@@ -1,0 +1,177 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API server for market \u0026 trading data with Binance API",
+        "title": "Cokro Binance",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/general/server-time": {
+            "get": {
+                "description": "Check server time from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "General"
+                ],
+                "summary": "Check server time",
+                "responses": {}
+            }
+        },
+        "/market/agregate-trade-lists": {
+            "get": {
+                "description": "Check agregate trade list from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Check agregate trade list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entries to fetch (min: 50, max: 1000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Trade ID to fetch from (default: 0)",
+                        "name": "fromId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start time in RFC3339 format (e.g. 2025-10-14T00:00:00Z)",
+                        "name": "startTime",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End time in RFC3339 format (e.g. 2025-10-14T12:00:00Z)",
+                        "name": "endTime",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/market/old-trade-lookup": {
+            "get": {
+                "description": "Check old trade lookup from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Check old trade lookup",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entries to fetch (min: 50, max: 1000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Trade ID to fetch from (default: 0)",
+                        "name": "fromId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/market/order-book": {
+            "get": {
+                "description": "Check order book from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Check order book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entries to fetch (default: 100, min: 100, max: 5000)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/market/recent-trade-lists": {
+            "get": {
+                "description": "Check recent trade list from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Check recent trade list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entries to fetch (min: 50, max: 1000)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

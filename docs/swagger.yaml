@@ -1,0 +1,120 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: API server for market & trading data with Binance API
+  title: Cokro Binance
+  version: "1.0"
+paths:
+  /general/server-time:
+    get:
+      consumes:
+      - application/json
+      description: Check server time from Binance API
+      produces:
+      - application/json
+      responses: {}
+      summary: Check server time
+      tags:
+      - General
+  /market/agregate-trade-lists:
+    get:
+      consumes:
+      - application/json
+      description: Check agregate trade list from Binance API
+      parameters:
+      - description: Trading pair symbol (e.g. BTCUSDT)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: 'Number of entries to fetch (min: 50, max: 1000)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Trade ID to fetch from (default: 0)'
+        in: query
+        name: fromId
+        type: integer
+      - description: Start time in RFC3339 format (e.g. 2025-10-14T00:00:00Z)
+        in: query
+        name: startTime
+        type: string
+      - description: End time in RFC3339 format (e.g. 2025-10-14T12:00:00Z)
+        in: query
+        name: endTime
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Check agregate trade list
+      tags:
+      - Market
+  /market/old-trade-lookup:
+    get:
+      consumes:
+      - application/json
+      description: Check old trade lookup from Binance API
+      parameters:
+      - description: Trading pair symbol (e.g. BTCUSDT)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: 'Number of entries to fetch (min: 50, max: 1000)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Trade ID to fetch from (default: 0)'
+        in: query
+        name: fromId
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Check old trade lookup
+      tags:
+      - Market
+  /market/order-book:
+    get:
+      consumes:
+      - application/json
+      description: Check order book from Binance API
+      parameters:
+      - description: Trading pair symbol (e.g. BTCUSDT)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: 'Number of entries to fetch (default: 100, min: 100, max: 5000)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Check order book
+      tags:
+      - Market
+  /market/recent-trade-lists:
+    get:
+      consumes:
+      - application/json
+      description: Check recent trade list from Binance API
+      parameters:
+      - description: Trading pair symbol (e.g. BTCUSDT)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: 'Number of entries to fetch (min: 50, max: 1000)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Check recent trade list
+      tags:
+      - Market
+swagger: "2.0"

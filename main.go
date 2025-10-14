@@ -1,3 +1,8 @@
+// @title Cokro Binance
+// @version 1.0
+// @description API server for market & trading data with Binance API
+// @host localhost:8080
+// @BasePath /
 package main
 
 import (
@@ -6,12 +11,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/hafiihzafarhana/Cokro-Binance/config"
+	_ "github.com/hafiihzafarhana/Cokro-Binance/docs"
 	cGeneral "github.com/hafiihzafarhana/Cokro-Binance/domain/general/controller"
 	sGeneral "github.com/hafiihzafarhana/Cokro-Binance/domain/general/service"
 	cMarket "github.com/hafiihzafarhana/Cokro-Binance/domain/market/controller"
 	sMarket "github.com/hafiihzafarhana/Cokro-Binance/domain/market/service"
 	"github.com/hafiihzafarhana/Cokro-Binance/middleware/logging"
 	"github.com/hafiihzafarhana/Cokro-Binance/routes"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
 func main() {
@@ -35,6 +42,7 @@ func main() {
 			"message": "Ping Ping",
 		})
 	})
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
 	generalService := sGeneral.NewGeneralService()
 	generalController := cGeneral.NewGeneralController(generalService)
