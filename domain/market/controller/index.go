@@ -121,3 +121,31 @@ func (m *MarketController) CheckAgregateTradeList(c *fiber.Ctx) error {
 	return response.SendStatusOkWithDataResponse(c, "Data Ok" , dto.GetBinanceAggregateTradeResponse(data))
 }
 
+// CheckCandleStickData godoc
+// @Summary Check candle stick data
+// @Description Check candle stick data from Binance API
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT)"
+// @Param limit query int false "Number of entries to fetch (min: 50, max: 1000)"
+// @Param startTime query string false "Start time in RFC3339 format (e.g. 2025-10-14T00:00:00Z)"
+// @Param endTime query string false "End time in RFC3339 format (e.g. 2025-10-14T12:00:00Z)"
+// @Param interval query string true "Candle stick interval (e.g. 1m, 5m, 1h, 1d)" Enums(1m,3m,5m,15m,30m,1h,2h,4h,6h,12h,1d,3d,1w,1M)
+// @Param timeZone query string false "Time zone (default: UTC)"
+// @Param typeKline query string false "Type of kline (default: klines)" Enums(klines,uiklines)
+// @Router /market/candlestick-data [get]
+func (m *MarketController) CheckCandleStickData(c *fiber.Ctx) error {
+	var q dto.GetBinanceCandleStickDataReq
+	if err := c.QueryParser(&q); err != nil {
+		return response.SendStatusBadRequest(c, "invalid query: "+err.Error())
+	}
+	if err := validator.ValidateStruct(q); err != nil {
+		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
+	}
+	data, err := m.MarketService.GetCandleStickData(&q)
+	if err != nil {
+		return response.SendStatusInternalServerError(c, err.Error())
+	}
+	return response.SendStatusOkWithDataResponse(c, "Data Ok" , data)
+}

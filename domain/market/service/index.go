@@ -110,7 +110,6 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 	if !data.EndTime.IsZero() {
 		params.Add("endTime", fmt.Sprintf("%d", data.EndTime.UnixMilli()))
 	}
-	fmt.Println(params)
 	fullURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
 	resp, err := http.Get(fullURL)
 	if err != nil {
@@ -128,4 +127,75 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 		t.DateTime = time.UnixMilli(t.Timestamp).Local().Format("2006-01-02 15:04:05")
 	}
 	return trades, nil
+}
+
+func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entities.MarketCandleStickDataEntity, error) {
+	baseURL := "https://api.binance.com/api/v3/klines"
+	if data.TypeKline == "uiklines" {
+		baseURL = "https://api.binance.com/api/v3/uiKlines"
+	}
+	params := url.Values{}
+	params.Add("symbol", data.Symbol)
+	params.Add("interval", data.Interval)
+	if data.Limit > 0 {
+		params.Add("limit", fmt.Sprintf("%d", data.Limit))
+	}
+	if !data.StartTime.IsZero() {
+		params.Add("startTime", fmt.Sprintf("%d", data.StartTime.UnixMilli()))
+	}
+	if !data.EndTime.IsZero() {
+		params.Add("endTime", fmt.Sprintf("%d", data.EndTime.UnixMilli()))
+	}
+	if data.TimeZone != "" {
+		params.Add("timeZone", data.TimeZone)
+	}
+	fullURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
+	resp, err := http.Get(fullURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request Binance API: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
+	}
+	var rawData [][]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&rawData); err != nil {
+		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
+	}
+	candles := make([]*entities.MarketCandleStickDataEntity, 0, len(rawData))
+	for _, item := range rawData {
+		if len(item) < 11 {
+			continue
+		}
+		openTime, _ := item[0].(float64)
+		openPrice, _ := item[1].(string)
+		highPrice, _ := item[2].(string)
+		lowPrice, _ := item[3].(string)
+		closePrice, _ := item[4].(string)
+		volume, _ := item[5].(string)
+		closeTime, _ := item[6].(float64)
+		quoteAssetVolume, _ := item[7].(string)
+		numberOfTrades, _ := item[8].(float64)
+		takerBuyBaseAssetVolume, _ := item[9].(string)
+		takerBuyQuoteAssetVolume, _ := item[10].(string)
+
+		candle := &entities.MarketCandleStickDataEntity{
+			OpenTime:               int64(openTime),
+			OpenTimeStr:            time.UnixMilli(int64(openTime)).Local().Format("2006-01-02 15:04:05"),
+			OpenPrice:              openPrice,
+			HighPrice:              highPrice,
+			LowPrice:               lowPrice,
+			ClosePrice:             closePrice,
+			Volume:                 volume,
+			CloseTime:              int64(closeTime),
+			CloseTimeStr:           time.UnixMilli(int64(closeTime)).Local().Format("2006-01-02 15:04:05"),
+			QuoteAssetVolume:       quoteAssetVolume,
+			NumberOfTrades:         int(numberOfTrades),
+			TakerBuyBaseAssetVolume: takerBuyBaseAssetVolume,
+			TakerBuyQuoteAssetVolume: takerBuyQuoteAssetVolume,
+			TypeKline: data.TypeKline,
+		}
+		candles = append(candles, candle)
+	}
+	return candles, nil
 }

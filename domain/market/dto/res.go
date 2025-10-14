@@ -35,4 +35,3 @@ func GetBinanceAggregateTradeResponse(users []*entities.MarketAgregateTradeListE
 
 	return res
 }
-
