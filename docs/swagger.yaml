@@ -110,6 +110,23 @@ paths:
       summary: Check candle stick data
       tags:
       - Market
+  /market/current-average-price:
+    get:
+      consumes:
+      - application/json
+      description: Check current average price from Binance API
+      parameters:
+      - description: Trading pair symbol (e.g. BTCUSDT)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Check current average price
+      tags:
+      - Market
   /market/old-trade-lookup:
     get:
       consumes:

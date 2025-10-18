@@ -12,6 +12,7 @@ type MarketServiceInterface interface {
 	GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLookupReq) ([]*entity.MarketOldTradeLookupEntity, error)
 	GetAgregateTradeList(data *dto.GetBinanceAgregateTradeListReq) ([]*entity.MarketAgregateTradeListEntity, error)
 	GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entity.MarketCandleStickDataEntity, error)
+	GetCurrentAveragePrice(symbol string) (*entity.MarketCurrentAveragePriceEntity, error)
 }
 
 type MarketControllerInterface interface {
@@ -20,4 +21,5 @@ type MarketControllerInterface interface {
 	CheckOldTradeLookup(c *fiber.Ctx) error
 	CheckAgregateTradeList(c *fiber.Ctx) error
 	CheckCandleStickData(c *fiber.Ctx) error
+	CheckCurrentAveragePrice(c *fiber.Ctx) error
 }

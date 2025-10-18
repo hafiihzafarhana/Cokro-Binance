@@ -10,6 +10,7 @@ import (
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/dto"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/entity"
+	"github.com/hafiihzafarhana/Cokro-Binance/helper/convert"
 )
 
 type MarketService struct{}
@@ -62,7 +63,7 @@ func (s *MarketService) GetBinanceRecentTradeList(data *dto.GetBinanceRecentTrad
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
 	for _, t := range trades {
-		t.DateTime = time.UnixMilli(t.Time).Local().Format("2006-01-02 15:04:05")
+		t.DateTime = convert.UnixToDateTimeString(t.Time, "")
 	}
 	return trades, nil
 }
@@ -89,7 +90,7 @@ func (s *MarketService) GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLoo
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
 	for _, t := range trades {
-		t.DateTime = time.UnixMilli(t.Time).Local().Format("2006-01-02 15:04:05")
+		t.DateTime = convert.UnixToDateTimeString(t.Time, "UTC")
 	}
 	return trades, nil
 }
@@ -104,11 +105,18 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 	if data.FromId > 0 {
 		params.Add("fromId", fmt.Sprintf("%d", data.FromId))
 	}
-	if !data.StartTime.IsZero() {
-		params.Add("startTime", fmt.Sprintf("%d", data.StartTime.UnixMilli()))
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	if data.StartTime != "" {
+		localStart, err := time.ParseInLocation("2006-01-02T15:04:05", data.StartTime, loc)
+		if err == nil {
+			params.Add("startTime", fmt.Sprintf("%d", localStart.UTC().UnixMilli()))
+		}
 	}
-	if !data.EndTime.IsZero() {
-		params.Add("endTime", fmt.Sprintf("%d", data.EndTime.UnixMilli()))
+	if data.EndTime != "" {
+		localEnd, err := time.ParseInLocation("2006-01-02T15:04:05", data.EndTime, loc)
+		if err == nil {
+			params.Add("endTime", fmt.Sprintf("%d", localEnd.UTC().UnixMilli()))
+		}
 	}
 	fullURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
 	resp, err := http.Get(fullURL)
@@ -124,7 +132,7 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
 	for _, t := range trades {
-		t.DateTime = time.UnixMilli(t.Timestamp).Local().Format("2006-01-02 15:04:05")
+		t.DateTime = convert.UnixToDateTimeString(t.Timestamp, "")
 	}
 	return trades, nil
 }
@@ -140,11 +148,18 @@ func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataRe
 	if data.Limit > 0 {
 		params.Add("limit", fmt.Sprintf("%d", data.Limit))
 	}
-	if !data.StartTime.IsZero() {
-		params.Add("startTime", fmt.Sprintf("%d", data.StartTime.UnixMilli()))
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	if data.StartTime != "" {
+		localStart, err := time.ParseInLocation("2006-01-02T15:04:05", data.StartTime, loc)
+		if err == nil {
+			params.Add("startTime", fmt.Sprintf("%d", localStart.UTC().UnixMilli()))
+		}
 	}
-	if !data.EndTime.IsZero() {
-		params.Add("endTime", fmt.Sprintf("%d", data.EndTime.UnixMilli()))
+	if data.EndTime != "" {
+		localEnd, err := time.ParseInLocation("2006-01-02T15:04:05", data.EndTime, loc)
+		if err == nil {
+			params.Add("endTime", fmt.Sprintf("%d", localEnd.UTC().UnixMilli()))
+		}
 	}
 	if data.TimeZone != "" {
 		params.Add("timeZone", data.TimeZone)
@@ -162,40 +177,27 @@ func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataRe
 	if err := json.NewDecoder(resp.Body).Decode(&rawData); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
-	candles := make([]*entity.MarketCandleStickDataEntity, 0, len(rawData))
-	for _, item := range rawData {
-		if len(item) < 11 {
-			continue
-		}
-		openTime, _ := item[0].(float64)
-		openPrice, _ := item[1].(string)
-		highPrice, _ := item[2].(string)
-		lowPrice, _ := item[3].(string)
-		closePrice, _ := item[4].(string)
-		volume, _ := item[5].(string)
-		closeTime, _ := item[6].(float64)
-		quoteAssetVolume, _ := item[7].(string)
-		numberOfTrades, _ := item[8].(float64)
-		takerBuyBaseAssetVolume, _ := item[9].(string)
-		takerBuyQuoteAssetVolume, _ := item[10].(string)
-
-		candle := &entity.MarketCandleStickDataEntity{
-			OpenTime:               int64(openTime),
-			OpenTimeStr:            time.UnixMilli(int64(openTime)).Local().Format("2006-01-02 15:04:05"),
-			OpenPrice:              openPrice,
-			HighPrice:              highPrice,
-			LowPrice:               lowPrice,
-			ClosePrice:             closePrice,
-			Volume:                 volume,
-			CloseTime:              int64(closeTime),
-			CloseTimeStr:           time.UnixMilli(int64(closeTime)).Local().Format("2006-01-02 15:04:05"),
-			QuoteAssetVolume:       quoteAssetVolume,
-			NumberOfTrades:         int(numberOfTrades),
-			TakerBuyBaseAssetVolume: takerBuyBaseAssetVolume,
-			TakerBuyQuoteAssetVolume: takerBuyQuoteAssetVolume,
-			TypeKline: data.TypeKline,
-		}
-		candles = append(candles, candle)
-	}
+	candles := entity.MapMarketCandleStickData(rawData, data.TypeKline)
 	return candles, nil
+}
+
+func (s *MarketService) GetCurrentAveragePrice(symbol string) (*entity.MarketCurrentAveragePriceEntity, error) {
+	baseURL := "https://api.binance.com/api/v3/avgPrice"
+	params := url.Values{}
+	params.Add("symbol", symbol)
+	fullURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
+	resp, err := http.Get(fullURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request Binance API: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
+	}
+	var rawData map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&rawData); err != nil {
+		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
+	}
+	currentAvgPrice := entity.MapMarketCurrentAveragePrice(rawData)
+	return currentAvgPrice, nil
 }

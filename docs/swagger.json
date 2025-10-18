@@ -156,6 +156,31 @@
                 "responses": {}
             }
         },
+        "/market/current-average-price": {
+            "get": {
+                "description": "Check current average price from Binance API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Check current average price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/market/old-trade-lookup": {
             "get": {
                 "description": "Check old trade lookup from Binance API",

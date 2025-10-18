@@ -22,6 +22,7 @@ func MarketRoutes(app *fiber.App, handler market.MarketControllerInterface) {
 	marketGroup.Get("/old-trade-lookup", handler.CheckOldTradeLookup)
 	marketGroup.Get("/agregate-trade-lists", handler.CheckAgregateTradeList)
 	marketGroup.Get("/candlestick-data", handler.CheckCandleStickData) // klines and uiklines
+	marketGroup.Get("/current-average-price", handler.CheckCurrentAveragePrice)
 }
 func TradingRoutes(app *fiber.App) {
 	tradingGroup := app.Group("/trading")

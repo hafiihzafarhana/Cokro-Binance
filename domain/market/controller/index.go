@@ -149,3 +149,25 @@ func (m *MarketController) CheckCandleStickData(c *fiber.Ctx) error {
 	}
 	return response.SendStatusOkWithDataResponse(c, "Data Ok" , data)
 }
+
+// CheckCurrentAveragePrice godoc
+// @Summary Check current average price
+// @Description Check current average price from Binance API
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT)"
+// @Router /market/current-average-price [get]
+func (m *MarketController) CheckCurrentAveragePrice(c *fiber.Ctx) error {
+	symbol := c.Query("symbol")
+	if symbol == "" {
+		return response.SendStatusBadRequest(c, "symbol query parameter is required")
+	}
+
+	data, err := m.MarketService.GetCurrentAveragePrice(symbol)
+	if err != nil {
+		return response.SendStatusInternalServerError(c, err.Error())
+	}
+
+	return response.SendStatusOkWithDataResponse(c, "Data Ok", data)
+}
