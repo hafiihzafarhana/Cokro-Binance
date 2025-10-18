@@ -9,7 +9,7 @@ import (
 
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/dto"
-	"github.com/hafiihzafarhana/Cokro-Binance/entities"
+	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/entity"
 )
 
 type MarketService struct{}
@@ -18,7 +18,7 @@ func NewMarketService() market.MarketServiceInterface {
 	return &MarketService{}
 }
 
-func (s *MarketService) GetBinanceOrderBook(data *dto.GetBinanceOrderBookReq) (*entities.MarketOrderBookEntity, error) {
+func (s *MarketService) GetBinanceOrderBook(data *dto.GetBinanceOrderBookReq) (*entity.MarketOrderBookEntity, error) {
 	baseURL := "https://api.binance.com/api/v3/depth"
 	params := url.Values{}
 	params.Add("symbol", data.Symbol)
@@ -34,14 +34,14 @@ func (s *MarketService) GetBinanceOrderBook(data *dto.GetBinanceOrderBookReq) (*
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
 	}
-	var orderBook entities.MarketOrderBookEntity
+	var orderBook entity.MarketOrderBookEntity
 	if err := json.NewDecoder(resp.Body).Decode(&orderBook); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
 	return &orderBook, nil
 }
 
-func (s *MarketService) GetBinanceRecentTradeList(data *dto.GetBinanceRecentTradeListReq) ([]*entities.MarketRecentTradeListEntity, error) {
+func (s *MarketService) GetBinanceRecentTradeList(data *dto.GetBinanceRecentTradeListReq) ([]*entity.MarketRecentTradeListEntity, error) {
 	baseURL := "https://api.binance.com/api/v3/trades"
 	params := url.Values{}
 	params.Add("symbol", data.Symbol)
@@ -57,7 +57,7 @@ func (s *MarketService) GetBinanceRecentTradeList(data *dto.GetBinanceRecentTrad
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
 	}
-	var trades []*entities.MarketRecentTradeListEntity
+	var trades []*entity.MarketRecentTradeListEntity
 	if err := json.NewDecoder(resp.Body).Decode(&trades); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
@@ -67,7 +67,7 @@ func (s *MarketService) GetBinanceRecentTradeList(data *dto.GetBinanceRecentTrad
 	return trades, nil
 }
 
-func (s *MarketService) GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLookupReq) ([]*entities.MarketOldTradeLookupEntity, error) {
+func (s *MarketService) GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLookupReq) ([]*entity.MarketOldTradeLookupEntity, error) {
 	baseURL := "https://api.binance.com/api/v3/historicalTrades"
 	params := url.Values{}
 	params.Add("symbol", data.Symbol)
@@ -84,7 +84,7 @@ func (s *MarketService) GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLoo
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
 	}
-	var trades []*entities.MarketOldTradeLookupEntity
+	var trades []*entity.MarketOldTradeLookupEntity
 	if err := json.NewDecoder(resp.Body).Decode(&trades); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
@@ -94,7 +94,7 @@ func (s *MarketService) GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLoo
 	return trades, nil
 }
 
-func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeListReq) ([]*entities.MarketAgregateTradeListEntity, error) {
+func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeListReq) ([]*entity.MarketAgregateTradeListEntity, error) {
 	baseURL := "https://api.binance.com/api/v3/aggTrades"
 	params := url.Values{}
 	params.Add("symbol", data.Symbol)
@@ -119,7 +119,7 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Binance API returned status: %d", resp.StatusCode)
 	}
-	var trades []*entities.MarketAgregateTradeListEntity
+	var trades []*entity.MarketAgregateTradeListEntity
 	if err := json.NewDecoder(resp.Body).Decode(&trades); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
@@ -129,7 +129,7 @@ func (s *MarketService) GetAgregateTradeList(data *dto.GetBinanceAgregateTradeLi
 	return trades, nil
 }
 
-func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entities.MarketCandleStickDataEntity, error) {
+func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entity.MarketCandleStickDataEntity, error) {
 	baseURL := "https://api.binance.com/api/v3/klines"
 	if data.TypeKline == "uiklines" {
 		baseURL = "https://api.binance.com/api/v3/uiKlines"
@@ -162,7 +162,7 @@ func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataRe
 	if err := json.NewDecoder(resp.Body).Decode(&rawData); err != nil {
 		return nil, fmt.Errorf("failed to decode Binance response: %v", err)
 	}
-	candles := make([]*entities.MarketCandleStickDataEntity, 0, len(rawData))
+	candles := make([]*entity.MarketCandleStickDataEntity, 0, len(rawData))
 	for _, item := range rawData {
 		if len(item) < 11 {
 			continue
@@ -179,7 +179,7 @@ func (s *MarketService) GetCandleStickData(data *dto.GetBinanceCandleStickDataRe
 		takerBuyBaseAssetVolume, _ := item[9].(string)
 		takerBuyQuoteAssetVolume, _ := item[10].(string)
 
-		candle := &entities.MarketCandleStickDataEntity{
+		candle := &entity.MarketCandleStickDataEntity{
 			OpenTime:               int64(openTime),
 			OpenTimeStr:            time.UnixMilli(int64(openTime)).Local().Format("2006-01-02 15:04:05"),
 			OpenPrice:              openPrice,

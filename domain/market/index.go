@@ -3,15 +3,15 @@ package market
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/dto"
-	"github.com/hafiihzafarhana/Cokro-Binance/entities"
+	"github.com/hafiihzafarhana/Cokro-Binance/domain/market/entity"
 )
 
 type MarketServiceInterface interface {
-	GetBinanceOrderBook(data *dto.GetBinanceOrderBookReq) (*entities.MarketOrderBookEntity, error)
-	GetBinanceRecentTradeList(data *dto.GetBinanceRecentTradeListReq) ([]*entities.MarketRecentTradeListEntity, error)
-	GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLookupReq) ([]*entities.MarketOldTradeLookupEntity, error)
-	GetAgregateTradeList(data *dto.GetBinanceAgregateTradeListReq) ([]*entities.MarketAgregateTradeListEntity, error)
-	GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entities.MarketCandleStickDataEntity, error)
+	GetBinanceOrderBook(data *dto.GetBinanceOrderBookReq) (*entity.MarketOrderBookEntity, error)
+	GetBinanceRecentTradeList(data *dto.GetBinanceRecentTradeListReq) ([]*entity.MarketRecentTradeListEntity, error)
+	GetBinanceOldTradeLookup(data *dto.GetBinanceOldTradeLookupReq) ([]*entity.MarketOldTradeLookupEntity, error)
+	GetAgregateTradeList(data *dto.GetBinanceAgregateTradeListReq) ([]*entity.MarketAgregateTradeListEntity, error)
+	GetCandleStickData(data *dto.GetBinanceCandleStickDataReq) ([]*entity.MarketCandleStickDataEntity, error)
 }
 
 type MarketControllerInterface interface {

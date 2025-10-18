@@ -1,8 +1,6 @@
 package dto
 
-import (
-	"github.com/hafiihzafarhana/Cokro-Binance/entities"
-)
+import "github.com/hafiihzafarhana/Cokro-Binance/domain/market/entity"
 
 type GetBinanceAggregateTradeRes struct {
 	TradeId      int    `json:"tradeId"`
@@ -16,7 +14,7 @@ type GetBinanceAggregateTradeRes struct {
 	IsBestMatch  bool   `json:"isBestMatch"`
 }
 
-func GetBinanceAggregateTradeResponse(users []*entities.MarketAgregateTradeListEntity) []*GetBinanceAggregateTradeRes {
+func GetBinanceAggregateTradeResponse(users []*entity.MarketAgregateTradeListEntity) []*GetBinanceAggregateTradeRes {
 	res := make([]*GetBinanceAggregateTradeRes, len(users))
 
 	for i, u := range users {
