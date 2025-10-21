@@ -1,3 +1,3 @@
 run:
-	swag init --parseDependency --parseInternal
-	go run main.go
+	swag init -g cmd/app/main.go --output docs --parseDependency --parseInternal
+	go run cmd/app/main.go
