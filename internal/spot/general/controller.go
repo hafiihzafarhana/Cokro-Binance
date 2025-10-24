@@ -9,10 +9,10 @@ import (
 )
 
 type GeneralController struct {
-	usecase usecase.MarketUseCaseInterface
+	usecase usecase.MarketUsecaseInterface
 }
 
-func NewGeneralController(usecase usecase.MarketUseCaseInterface) *GeneralController {
+func NewGeneralController(usecase usecase.MarketUsecaseInterface) GeneralControllerInterface {
 	return &GeneralController{
 		usecase: usecase,
 	}

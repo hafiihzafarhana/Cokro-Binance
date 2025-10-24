@@ -13,7 +13,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/hafiihzafarhana/Cokro-Binance/config"
 	_ "github.com/hafiihzafarhana/Cokro-Binance/docs"
-	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/bootstrap"
+	bGeneral "github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/bootstrap"
+	bMarket "github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/bootstrap"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/middleware/logging"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
@@ -43,7 +44,8 @@ func main() {
 
 	bootConfig := config.BootConfig()
 
-	bootstrap.SetupSpotGeneralModule(app)
+	bGeneral.SetupSpotGeneralModule(app)
+	bMarket.SetupSpotMarketModule(app)
 
 	addr := fmt.Sprintf(":%d", bootConfig.AppPort)
 	if err := app.Listen(addr); err != nil {

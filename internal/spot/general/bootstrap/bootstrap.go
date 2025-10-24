@@ -11,7 +11,7 @@ import (
 func SetupSpotGeneralModule(app *fiber.App) {
 	httpClient := binancespot.NewBinanceSpotHttpClient()
 	repo := repository.NewGeneralRepository(httpClient)
-	usecase := usecase.NewGeneralService(repo)
+	usecase := usecase.NewGeneralUsecase(repo)
 	ctrl := general.NewGeneralController(usecase)
 	general.RegisterGeneralRoutes(app, ctrl)
 }

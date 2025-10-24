@@ -7,15 +7,15 @@ import (
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/dto"
 )
 
-type GeneralServiceImpl struct{
+type GeneralUsecaseImpl struct{
 	repo general.GeneralRepository
 }
 
-func NewGeneralService(repo general.GeneralRepository) MarketUseCaseInterface {
-    return &GeneralServiceImpl{repo: repo}
+func NewGeneralUsecase(repo general.GeneralRepository) MarketUsecaseInterface {
+    return &GeneralUsecaseImpl{repo: repo}
 }
 
-func (s *GeneralServiceImpl) GetServerTime(ctx context.Context) (*dto.GeneralServerTimeRes, error) {
+func (s *GeneralUsecaseImpl) GetServerTime(ctx context.Context) (*dto.GeneralServerTimeRes, error) {
 	result, err := s.repo.GetServerTime(ctx)
 	if err != nil {
 		return nil, err

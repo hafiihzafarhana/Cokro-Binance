@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
+	"strings"
 	"time"
 )
 
@@ -27,11 +27,9 @@ func NewBinanceSpotHttpClient() *HttpClient {
 }
 
 func (c *HttpClient) Do(ctx context.Context, method, endpoint string, body io.Reader) ([]byte, error) {
-	u, err := url.JoinPath(c.BaseURL, endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid endpoint: %w", err)
-	}
-
+	u := strings.TrimRight(c.BaseURL, "/") + "/" + strings.TrimLeft(endpoint, "/")
+	fmt.Println(u)
+	fmt.Println(endpoint)
 	req, err := http.NewRequestWithContext(ctx, method, u, body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
