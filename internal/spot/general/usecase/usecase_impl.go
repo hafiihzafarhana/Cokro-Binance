@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/general"
-	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/dto"
+	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/general/entity"
 )
 
 type GeneralUsecaseImpl struct{
@@ -15,10 +15,10 @@ func NewGeneralUsecase(repo general.GeneralRepository) MarketUsecaseInterface {
     return &GeneralUsecaseImpl{repo: repo}
 }
 
-func (s *GeneralUsecaseImpl) GetServerTime(ctx context.Context) (*dto.GeneralServerTimeRes, error) {
+func (s *GeneralUsecaseImpl) GetServerTime(ctx context.Context) (*entity.GeneralServerTimeEntity, error) {
 	result, err := s.repo.GetServerTime(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return ToGeneralServerTimeRes(result), nil
+	return result, nil
 }

@@ -7,7 +7,7 @@ type GenericSymbolLimitReq struct {
 
 type GetOldTradeLookupReq struct {
 	GenericSymbolLimitReq
-	FromId int `query:"fromId" validate:"required"`
+	FromId int `query:"fromId" validate:"omitempty,gte=0"`
 }
 
 type GetAgregateTradeListReq struct {

@@ -2,6 +2,7 @@ package market
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/dto"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/usecase"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/response"
@@ -35,7 +36,11 @@ func (m *MarketController) CheckBinanceOrderBook(c *fiber.Ctx) error {
 	if err := validator.ValidateStruct(q); err != nil {
 		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
 	}
-	data, err := m.usecase.GetBinanceOrderBook(c.UserContext(), &q)
+	params := market.GenericSymbolLimitParams{
+		Symbol: q.Symbol,
+		Limit:  q.Limit,
+	}
+	data, err := m.usecase.GetBinanceOrderBook(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
@@ -60,7 +65,11 @@ func (m *MarketController) CheckBinanceRecentTradeList(c *fiber.Ctx) error {
 	if err := validator.ValidateStruct(q); err != nil {
 		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
 	}
-	data, err := m.usecase.GetBinanceRecentTradeList(c.UserContext(), &q)
+	params := market.GenericSymbolLimitParams{
+		Symbol: q.Symbol,
+		Limit:  q.Limit,
+	}
+	data, err := m.usecase.GetBinanceRecentTradeList(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
@@ -75,7 +84,7 @@ func (m *MarketController) CheckBinanceRecentTradeList(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT)"
-// @Param limit query int false "Number of entries to fetch (min: 50, max: 1000)"
+// @Param limit query int false "Number of entries to fetch (min: 100, max: 1000)"
 // @Param fromId query int false "Trade ID to fetch from (default: 0)"
 // @Router /market/old-trade-lookup [get]
 func (m *MarketController) CheckBinanceOldTradeLookup(c *fiber.Ctx) error {
@@ -86,7 +95,14 @@ func (m *MarketController) CheckBinanceOldTradeLookup(c *fiber.Ctx) error {
 	if err := validator.ValidateStruct(q); err != nil {
 		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
 	}
-	data, err := m.usecase.GetBinanceOldTradeLookup(c.UserContext(), &q)
+	params := market.GetOldTradeLookupParams{
+		FromId: q.FromId,
+		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
+			Symbol: q.Symbol,
+			Limit:  q.Limit,
+		},
+	}
+	data, err := m.usecase.GetBinanceOldTradeLookup(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
@@ -115,7 +131,17 @@ func (m *MarketController) CheckBinanceAgregateTradeList(c *fiber.Ctx) error {
 	if err := validator.ValidateStruct(q); err != nil {
 		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
 	}
-	data, err := m.usecase.GetBinanceAgregateTradeList(c.UserContext(), &q)
+	params := market.GetAgregateTradeListParams{
+		FromId: q.FromId,
+		StartTime: q.StartTime,
+		EndTime:   q.EndTime,
+		TimeZone:  q.TimeZone,
+		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
+			Symbol: q.Symbol,
+			Limit:  q.Limit,
+		},
+	}
+	data, err := m.usecase.GetBinanceAgregateTradeList(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
@@ -129,7 +155,7 @@ func (m *MarketController) CheckBinanceAgregateTradeList(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT)"
-// @Param limit query int false "Number of entries to fetch (min: 50, max: 1000)"
+// @Param limit query int false "Number of entries to fetch (min: 100, max: 1000)"
 // @Param startTime query string false "Start time in RFC3339 format (e.g. 2025-10-14T00:00:00Z)"
 // @Param endTime query string false "End time in RFC3339 format (e.g. 2025-10-14T12:00:00Z)"
 // @Param interval query string true "Candle stick interval (e.g. 1m, 5m, 1h, 1d)" Enums(1m,3m,5m,15m,30m,1h,2h,4h,6h,12h,1d,3d,1w,1M)
@@ -144,7 +170,18 @@ func (m *MarketController) CheckBinanceCandleStickData(c *fiber.Ctx) error {
 	if err := validator.ValidateStruct(q); err != nil {
 		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
 	}
-	data, err := m.usecase.GetBinanceCandleStickData(c.UserContext(), &q)
+	params := market.GetCandleStickDataParams{
+		StartTime: q.StartTime,
+		EndTime:   q.EndTime,
+		Interval:  q.Interval,
+		TypeKline: q.TypeKline,
+		TimeZone:  q.TimeZone,
+		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
+			Symbol: q.Symbol,
+			Limit:  q.Limit,
+		},
+	}
+	data, err := m.usecase.GetBinanceCandleStickData(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}

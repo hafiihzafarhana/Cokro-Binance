@@ -65,7 +65,7 @@ paths:
         name: symbol
         required: true
         type: string
-      - description: 'Number of entries to fetch (min: 50, max: 1000)'
+      - description: 'Number of entries to fetch (min: 100, max: 1000)'
         in: query
         name: limit
         type: integer
@@ -142,7 +142,7 @@ paths:
         name: symbol
         required: true
         type: string
-      - description: 'Number of entries to fetch (min: 50, max: 1000)'
+      - description: 'Number of entries to fetch (min: 100, max: 1000)'
         in: query
         name: limit
         type: integer

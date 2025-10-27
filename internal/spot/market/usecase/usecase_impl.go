@@ -6,7 +6,6 @@ import (
 
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market/entity"
-	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/dto"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/utils/convert"
 )
 
@@ -18,78 +17,44 @@ func NewMarketUsecase(repo market.MarketRepository) MarketUseCaseInterface {
     return &MarketUsecaseImpl{repo: repo}
 }
 
-func (s *MarketUsecaseImpl) GetBinanceOrderBook(ctx context.Context, req *dto.GenericSymbolLimitReq) (*entity.MarketOrderBookEntity, error) {
-	params := &market.GenericSymbolLimitParams{
-		Symbol: req.Symbol,
-		Limit:  req.Limit,
-	}
-
-	return s.repo.GetOrderBook(ctx, params)
+func (s *MarketUsecaseImpl) GetBinanceOrderBook(ctx context.Context, req *market.GenericSymbolLimitParams) (*entity.MarketOrderBookEntity, error) {
+	return s.repo.GetOrderBook(ctx, req)
 }
 
-func (s *MarketUsecaseImpl) GetBinanceRecentTradeList(ctx context.Context, req *dto.GenericSymbolLimitReq) ([]*entity.MarketRecentTradeListEntity, error) {
-	params := &market.GenericSymbolLimitParams{
-		Symbol: req.Symbol,
-		Limit:  req.Limit,
-	}
-
-	results, err := s.repo.GetRecentTradeList(ctx, params)
+func (s *MarketUsecaseImpl) GetBinanceRecentTradeList(ctx context.Context, req *market.GenericSymbolLimitParams) ([]*entity.MarketRecentTradeListEntity, error) {
+	results, err := s.repo.GetRecentTradeList(ctx, req)
 	if err != nil {
 		return nil, err
-	}
-
-	for _, r := range results {
-		r.DateTime = convert.UnixToDateTimeString(r.Time, "Asia/Jakarta")
 	}
 
 	return results, nil
 }
 
-func (s *MarketUsecaseImpl) GetBinanceOldTradeLookup(ctx context.Context, req *dto.GetOldTradeLookupReq) ([]*entity.MarketOldTradeLookupEntity, error) {
-	params := &market.GetOldTradeLookupParams{
-		FromId: req.FromId,
-		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
-			Symbol: req.Symbol,
-			Limit:  req.Limit,
-		},
+func (s *MarketUsecaseImpl) GetBinanceOldTradeLookup(ctx context.Context, req *market.GetOldTradeLookupParams) ([]*entity.MarketOldTradeLookupEntity, error) {
+	results, err := s.repo.GetOldTradeLookup(ctx, req)
+	if err != nil {
+		return nil, err
 	}
 
-	return s.repo.GetOldTradeLookup(ctx, params)
+	return results, nil
 }
 
-func (s *MarketUsecaseImpl) GetBinanceAgregateTradeList(ctx context.Context, req *dto.GetAgregateTradeListReq) ([]*entity.MarketAgregateTradeListEntity, error) {
+func (s *MarketUsecaseImpl) GetBinanceAgregateTradeList(ctx context.Context, req *market.GetAgregateTradeListParams) ([]*entity.MarketAgregateTradeListEntity, error) {
 	timeZone := req.TimeZone
 	if timeZone == "" {
 		timeZone = "UTC"
 	}
-	loc, err := time.LoadLocation(timeZone)
+	req.StartTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.StartTime, req.TimeZone), req.TimeZone)
+	req.EndTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.EndTime, req.TimeZone), req.TimeZone)
+	results, err := s.repo.GetAgregateTradeList(ctx, req)
 	if err != nil {
-		loc = time.UTC
-	}
-	const layout = "2006-01-02T15:04:05"
-	if req.StartTime != "" {
-		if t, err := time.ParseInLocation(layout, req.StartTime, loc); err == nil {
-			req.StartTime = t.UTC().Format(layout)
-		}
-	}
-	if req.EndTime != "" {
-		if t, err := time.ParseInLocation(layout, req.EndTime, loc); err == nil {
-			req.EndTime = t.UTC().Format(layout)
-		}
-	}
-	params := &market.GetAgregateTradeListParams{
-		StartTime: req.StartTime,
-		EndTime:   req.EndTime,
-		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
-			Symbol: req.Symbol,
-			Limit:  req.Limit,
-		},
+		return nil, err
 	}
 
-	return s.repo.GetAgregateTradeList(ctx, params)
+	return results, nil
 }
 
-func (s *MarketUsecaseImpl) GetBinanceCandleStickData(ctx context.Context, req *dto.GetCandleStickDataReq) ([]*entity.MarketCandleStickDataEntity, error) {
+func (s *MarketUsecaseImpl) GetBinanceCandleStickData(ctx context.Context, req *market.GetCandleStickDataParams) ([]*entity.MarketCandleStickDataEntity, error) {
 	timeZone := req.TimeZone
 	if timeZone == "" {
 		timeZone = "UTC"

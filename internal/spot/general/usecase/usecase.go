@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/dto"
+	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/general/entity"
 )
 
 type MarketUsecaseInterface interface {
-	GetServerTime(ctx context.Context) (*dto.GeneralServerTimeRes, error)
+	GetServerTime(ctx context.Context) (*entity.GeneralServerTimeEntity, error)
 }

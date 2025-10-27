@@ -4,58 +4,43 @@ cokro-binance/
 │ └── main.go
 │
 ├── config/
-│ ├── config.go
-│ └── env.yaml
+│ └── config.go
 │
 ├── domain/
-│ ├── spot/
-│ │ ├── market/
-│ │ │ ├── entity/
-│ │ │ │ └── market.go
-│ │ │ ├── repository.go
-│ │ │ ├── service.go
-│ │ │ └── error.go
-│ │ └── order/
-│ │ ├── entity/
-│ │ │ └── order.go
-│ │ ├── repository.go
-│ │ ├── service.go
-│ │ └── error.go
-│ └── futures/...
+│ └── spot/
+│ └── general/
+│ ├── entity/
+│ │ └── general_entity.go
+│ ├── repository.go // kontrak repository
+│ └── service.go // kontrak usecase (service)
 │
 ├── internal/
 │ └── spot/
-│ ├── bootstrap/
-│ │ └── spot_bootstrap.go
-│ ├── market/
-│ │ ├── repository/
-│ │ │ └── impl.go
-│ │ ├── usecase/
-│ │ │ ├── usecase_impl.go // implementasi
-│ │ │ └── mapper.go // mapper
-│ │ │ └── usecase.go // interface
-│ │ ├── controller.go
-│ │ ├── router.go
-│ │ └── dto/
+│ └── general/
+│ ├── repository/
+│ │ ├── model/
+│ │ │ ├── general_model.go
+│ │ │ └── mapper.go
+│ │ └── repository_impl.go
+│ │
+│ ├── usecase/
+│ │ ├── usecase.go // interface GeneralUsecase
+│ │ └── usecase_impl.go // implementasi
+│ │
+│ ├── dto/
 │ │ ├── request.go
 │ │ └── response.go
-│ └── order/
-│ └── ...
+│ │
+│ ├── controller.go
+│ └── router.go
 │
 ├── pkg/
 │ ├── httpclient/
-│ ├── logger/
-│ ├── helper/
+│ │ └── client.go
 │ ├── utils/
-│ ├── grpcclient/
-│ └── websocketclient/
+│ │ └── convert.go
+│ └── logger/
 │
-├── shared/
-│ ├── constant/
-│ ├── middleware/
-│ ├── error/
-│ └── response/
-│
-└── test/
-├── mocks/
-└── integration/
+└── shared/
+├── error/
+└── response/

@@ -15,6 +15,7 @@ type GetAgregateTradeListParams struct {
 	FromId int
 	StartTime string
 	EndTime   string
+	TimeZone  string
 }
 
 type GetCandleStickDataParams struct {

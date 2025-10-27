@@ -109,7 +109,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Number of entries to fetch (min: 50, max: 1000)",
+                        "description": "Number of entries to fetch (min: 100, max: 1000)",
                         "name": "limit",
                         "in": "query"
                     },
@@ -216,7 +216,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Number of entries to fetch (min: 50, max: 1000)",
+                        "description": "Number of entries to fetch (min: 100, max: 1000)",
                         "name": "limit",
                         "in": "query"
                     },
