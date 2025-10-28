@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market/entity"
@@ -59,34 +58,10 @@ func (s *MarketUsecaseImpl) GetBinanceCandleStickData(ctx context.Context, req *
 	if timeZone == "" {
 		timeZone = "UTC"
 	}
-	loc, err := time.LoadLocation(timeZone)
-	if err != nil {
-		loc = time.UTC
-	}
-	const layout = "2006-01-02T15:04:05"
-	if req.StartTime != "" {
-		if t, err := time.ParseInLocation(layout, req.StartTime, loc); err == nil {
-			req.StartTime = t.UTC().Format(layout)
-		}
-	}
-	if req.EndTime != "" {
-		if t, err := time.ParseInLocation(layout, req.EndTime, loc); err == nil {
-			req.EndTime = t.UTC().Format(layout)
-		}
-	}
-	params := &market.GetCandleStickDataParams{
-		Interval:  req.Interval,
-		StartTime: req.StartTime,
-		EndTime:   req.EndTime,
-		TypeKline: req.TypeKline,
-		TimeZone:  req.TimeZone,
-		GenericSymbolLimitParams: market.GenericSymbolLimitParams{
-			Symbol: req.Symbol,
-			Limit:  req.Limit,
-		},
-	}
-
-	return s.repo.GetCandleStickData(ctx, params)
+	req.TimeZone = convert.NormalizeTimeZone(timeZone)
+	req.StartTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.StartTime, timeZone), timeZone)
+	req.EndTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.EndTime, timeZone), timeZone)
+	return s.repo.GetCandleStickData(ctx, req)
 }
 
 func (s *MarketUsecaseImpl) GetBinanceCurrentAveragePrice(ctx context.Context, symbol string) (*entity.MarketCurrentAveragePriceEntity, error) {

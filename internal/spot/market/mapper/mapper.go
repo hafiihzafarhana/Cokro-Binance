@@ -53,3 +53,31 @@ func ToMarketAgregateTradeListEntity(e model.GetAgregateTradeListModel) *entity.
 		LastTradeId: e.LastTradeId,
 	}
 }
+
+func ToMarketCandleStickDataEntity(e []interface{}, endpointType string) *entity.MarketCandleStickDataEntity {
+	return &entity.MarketCandleStickDataEntity{
+		OpenTime:                 int64(e[0].(float64)),
+		OpenTimeStr:              convert.UnixToDateTimeString(int64(e[0].(float64)), "Asia/Jakarta"),
+		OpenPrice:                e[1].(string),
+		HighPrice:                e[2].(string),
+		LowPrice:                 e[3].(string),
+		ClosePrice:               e[4].(string),
+		Volume:                   e[5].(string),
+		CloseTime:                int64(e[6].(float64)),
+		CloseTimeStr:             convert.UnixToDateTimeString(int64(e[6].(float64)), "Asia/Jakarta"),
+		QuoteAssetVolume:         e[7].(string),
+		NumberOfTrades:           int(e[8].(float64)),
+		TakerBuyBaseAssetVolume:  e[9].(string),
+		TakerBuyQuoteAssetVolume: e[10].(string),
+		TypeKline:                endpointType,
+	}
+}
+
+func ToMarketCurrentAveragePrice(e model.GetCurrentAveragePriceModel) *entity.MarketCurrentAveragePriceEntity {
+	return &entity.MarketCurrentAveragePriceEntity{
+		IntervalInMinute: e.IntervalInMinute,
+		Price: e.Price,
+		CloseTime: e.CloseTime,
+		CloseTimeStr: convert.UnixToDateTimeString(e.CloseTime, "Asia/Jakarta"),
+	}
+}

@@ -166,15 +166,37 @@ func (r *MarketRepositoryImpl) GetCandleStickData(ctx context.Context, params *m
 		return nil, err
 	}
 
-	var result []*entity.MarketCandleStickDataEntity
-	if err := json.Unmarshal(resp, &result); err != nil {
+	var rawData [][]interface{}
+	if err := json.Unmarshal(resp, &rawData); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	return result, nil
+	var results []*entity.MarketCandleStickDataEntity
+	for _, item := range rawData {
+		if len(item) < 11 {
+			continue
+		}
+		results = append(results, mapper.ToMarketCandleStickDataEntity(item, endpointType))
+	}
+
+	return results, nil
 }
 
 func (r *MarketRepositoryImpl) GetCurrentAveragePrice(ctx context.Context, symbol string) (*entity.MarketCurrentAveragePriceEntity, error) {
-	return nil, nil
+	paramsQ := url.Values{}
+	paramsQ.Add("symbol", symbol)
+	endpoint := fmt.Sprintf("%s?%s", "/avgPrice", paramsQ.Encode())
+
+	resp, err := r.client.Get(ctx, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	var models model.GetCurrentAveragePriceModel
+	if err := json.Unmarshal(resp, &models); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	return mapper.ToMarketCurrentAveragePrice(models), nil
 }
 
