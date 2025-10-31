@@ -177,6 +177,32 @@ paths:
       summary: Check order book
       tags:
       - Market
+  /market/price-change-24hr:
+    get:
+      consumes:
+      - application/json
+      description: Get 24-hour price change statistics (similar to Binance /ticker/24hr
+        endpoint)
+      parameters:
+      - description: 'Trading pair symbol (e.g. BTCUSDT, ETHUSDT, or multiple: BTCUSDT,ETHUSDT)'
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: Type of request (optional, e.g. FULL, MINI)
+        in: query
+        name: type
+        type: string
+      - description: Filter by symbol status (TRADING, HALT, BREAK)
+        in: query
+        name: symbolStatus
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get 24-hour ticker price change statistics
+      tags:
+      - Market
   /market/recent-trade-lists:
     get:
       consumes:

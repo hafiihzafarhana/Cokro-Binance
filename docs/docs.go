@@ -261,6 +261,43 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/market/price-change-24hr": {
+            "get": {
+                "description": "Get 24-hour price change statistics (similar to Binance /ticker/24hr endpoint)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Get 24-hour ticker price change statistics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT, ETHUSDT, or multiple: BTCUSDT,ETHUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Type of request (optional, e.g. FULL, MINI)",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by symbol status (TRADING, HALT, BREAK)",
+                        "name": "symbolStatus",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/market/recent-trade-lists": {
             "get": {
                 "description": "Check recent trade list from Binance API",

@@ -26,3 +26,9 @@ type GetCandleStickDataReq struct {
 	TypeKline string `query:"typeKline" validate:"omitempty,oneof=uiklines klines"`
 	TimeZone  string `query:"timeZone" validate:"omitempty"`
 }
+
+type GetPriceChange24hrParams struct {
+	Symbol      string   `query:"symbol" validate:"required,uppercase"`
+	Type       string   `query:"type" validate:"omitempty,oneof=FULL MINI"`
+	SymbolStatus string  `query:"symbolStatus" validate:"omitempty,oneof=TRADING HALT BREAK"`
+}

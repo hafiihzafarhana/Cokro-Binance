@@ -209,3 +209,37 @@ func (m *MarketController) CheckBinanceCurrentAveragePrice(c *fiber.Ctx) error {
 
 	return response.SendStatusOkWithDataResponse(c, "Data Ok", data)
 }
+
+// CheckBinancePriceChange24hr godoc
+// @Summary Get 24-hour ticker price change statistics
+// @Description Get 24-hour price change statistics (similar to Binance /ticker/24hr endpoint)
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT, ETHUSDT, or multiple: BTCUSDT,ETHUSDT)"
+// @Param type query string false "Type of request (optional, e.g. FULL, MINI)"
+// @Param symbolStatus query string false "Filter by symbol status (TRADING, HALT, BREAK)"
+// @Router /market/price-change-24hr [get]
+func (m *MarketController) CheckBinancePriceChange24hr(c *fiber.Ctx) error {
+	var q dto.GetPriceChange24hrParams
+	if err := c.QueryParser(&q); err != nil {
+		return response.SendStatusBadRequest(c, "invalid query: "+err.Error())
+	}
+	if err := validator.ValidateStruct(q); err != nil {
+		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
+	}
+	params := market.GetPriceChange24hrParams{
+		Symbol:      q.Symbol,
+		Type:       q.Type,
+		SymbolStatus: q.SymbolStatus,
+	}
+
+	data, err := m.usecase.GetBinancePriceChange24hr(c.UserContext(), &params)
+	if err != nil {
+		return response.SendStatusInternalServerError(c, err.Error())
+	}
+
+	respData := dto.ToMarketTickerPrice24hrResponseList(data)
+
+	return response.SendStatusOkWithDataResponse(c, "Data Ok", respData)
+}

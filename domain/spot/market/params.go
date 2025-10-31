@@ -26,3 +26,9 @@ type GetCandleStickDataParams struct {
 	TypeKline string
 	TimeZone  string
 }
+
+type GetPriceChange24hrParams struct {
+	Symbol string
+	Type string
+	SymbolStatus string
+}

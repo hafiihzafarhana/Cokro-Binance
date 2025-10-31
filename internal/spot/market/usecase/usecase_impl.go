@@ -67,3 +67,7 @@ func (s *MarketUsecaseImpl) GetBinanceCandleStickData(ctx context.Context, req *
 func (s *MarketUsecaseImpl) GetBinanceCurrentAveragePrice(ctx context.Context, symbol string) (*entity.MarketCurrentAveragePriceEntity, error) {
 	return s.repo.GetCurrentAveragePrice(ctx, symbol)
 }
+
+func (s *MarketUsecaseImpl) GetBinancePriceChange24hr(ctx context.Context, req *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error) {
+	return s.repo.GetTickerPrice24hr(ctx, req)
+}

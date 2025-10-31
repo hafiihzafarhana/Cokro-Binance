@@ -11,6 +11,7 @@ import (
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/mapper"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/model"
 	binance "github.com/hafiihzafarhana/Cokro-Binance/shared/httpclient/binancespot"
+	arraydata "github.com/hafiihzafarhana/Cokro-Binance/shared/utils/arrayData"
 )
 
 type MarketRepositoryImpl struct {
@@ -198,5 +199,54 @@ func (r *MarketRepositoryImpl) GetCurrentAveragePrice(ctx context.Context, symbo
 	}
 
 	return mapper.ToMarketCurrentAveragePrice(models), nil
+}
+
+func (r *MarketRepositoryImpl) GetTickerPrice24hr(ctx context.Context, params *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error) {
+    splitSymbol := arraydata.SplitAndTrim(params.Symbol, ",")
+    if len(splitSymbol) == 0 {
+        return nil, fmt.Errorf("no symbol provided")
+    }
+
+    paramsQ := url.Values{}
+    if len(splitSymbol) > 1 {
+        jsonSymbols, _ := json.Marshal(splitSymbol)
+        paramsQ.Add("symbols", string(jsonSymbols))
+    } else {
+        paramsQ.Add("symbol", splitSymbol[0])
+    }
+
+    if params.Type != "" {
+        paramsQ.Add("type", params.Type)
+    }
+    if params.SymbolStatus != "" {
+        paramsQ.Add("symbolStatus", params.SymbolStatus)
+    }
+
+    endpoint := fmt.Sprintf("/ticker/24hr?%s", paramsQ.Encode())
+
+    resp, err := r.client.Get(ctx, endpoint)
+    if err != nil {
+        return nil, err
+    }
+
+    var results []*entity.MarketTickerPrice24hrEntity
+
+	if len(splitSymbol) > 1 {
+		var rawList []model.GetTickerPrice24hrModel
+		if err := json.Unmarshal(resp, &rawList); err != nil {
+			return nil, fmt.Errorf("failed to parse multi response: %w", err)
+		}
+		for _, raw := range rawList {
+			results = append(results, mapper.ToMarketTickerPrice24hrEntity(raw))
+		}
+	} else {
+		var raw model.GetTickerPrice24hrModel
+		if err := json.Unmarshal(resp, &raw); err != nil {
+			return nil, fmt.Errorf("failed to parse single response: %w", err)
+		}
+		results = append(results, mapper.ToMarketTickerPrice24hrEntity(raw))
+	}
+
+	return results, nil
 }
 

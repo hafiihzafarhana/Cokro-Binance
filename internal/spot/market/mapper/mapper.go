@@ -4,6 +4,7 @@ import (
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market/entity"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/model"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/utils/convert"
+	stringdata "github.com/hafiihzafarhana/Cokro-Binance/shared/utils/stringData"
 )
 
 func ToMarketOrderBookEntity(e model.GetOrderBookModel) *entity.MarketOrderBookEntity {
@@ -79,5 +80,32 @@ func ToMarketCurrentAveragePrice(e model.GetCurrentAveragePriceModel) *entity.Ma
 		Price: e.Price,
 		CloseTime: e.CloseTime,
 		CloseTimeStr: convert.UnixToDateTimeString(e.CloseTime, "Asia/Jakarta"),
+	}
+}
+
+func ToMarketTickerPrice24hrEntity(m model.GetTickerPrice24hrModel) *entity.MarketTickerPrice24hrEntity {
+	return &entity.MarketTickerPrice24hrEntity{
+		Symbol:      m.Symbol,
+		LastPrice:   m.LastPrice,
+		OpenPrice:   m.OpenPrice,
+		HighPrice:   m.HighPrice,
+		LowPrice:    m.LowPrice,
+		Volume:      m.Volume,
+		QuoteVolume: m.QuoteVolume,
+		OpenTime:    m.OpenTime,
+		CloseTime:   m.CloseTime,
+		FirstId:     m.FirstId,
+		LastId:      m.LastId,
+		Count:       m.Count,
+
+		PriceChange:        stringdata.StringPtr(m.PriceChange),
+		PriceChangePercent: stringdata.StringPtr(m.PriceChangePercent),
+		WeightedAvgPrice:   stringdata.StringPtr(m.WeightedAvgPrice),
+		PrevClosePrice:     stringdata.StringPtr(m.PrevClosePrice),
+		LastQty:            stringdata.StringPtr(m.LastQty),
+		BidPrice:           stringdata.StringPtr(m.BidPrice),
+		BidQty:             stringdata.StringPtr(m.BidQty),
+		AskPrice:           stringdata.StringPtr(m.AskPrice),
+		AskQty:             stringdata.StringPtr(m.AskQty),
 	}
 }

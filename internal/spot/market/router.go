@@ -12,4 +12,5 @@ func RegisterMarketRoutes(app *fiber.App, handler MarketControllerInterface) {
 	marketGroup.Get("/agregate-trade-lists", handler.CheckBinanceAgregateTradeList)
 	marketGroup.Get("/candlestick-data", handler.CheckBinanceCandleStickData) // klines and uiklines
 	marketGroup.Get("/current-average-price", handler.CheckBinanceCurrentAveragePrice)
+	marketGroup.Get("/price-change-24hr", handler.CheckBinancePriceChange24hr)
 }
