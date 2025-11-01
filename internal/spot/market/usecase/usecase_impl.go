@@ -21,21 +21,11 @@ func (s *MarketUsecaseImpl) GetBinanceOrderBook(ctx context.Context, req *market
 }
 
 func (s *MarketUsecaseImpl) GetBinanceRecentTradeList(ctx context.Context, req *market.GenericSymbolLimitParams) ([]*entity.MarketRecentTradeListEntity, error) {
-	results, err := s.repo.GetRecentTradeList(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return results, nil
+	return s.repo.GetRecentTradeList(ctx, req)
 }
 
 func (s *MarketUsecaseImpl) GetBinanceOldTradeLookup(ctx context.Context, req *market.GetOldTradeLookupParams) ([]*entity.MarketOldTradeLookupEntity, error) {
-	results, err := s.repo.GetOldTradeLookup(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return results, nil
+	return s.repo.GetOldTradeLookup(ctx, req)
 }
 
 func (s *MarketUsecaseImpl) GetBinanceAgregateTradeList(ctx context.Context, req *market.GetAgregateTradeListParams) ([]*entity.MarketAgregateTradeListEntity, error) {
