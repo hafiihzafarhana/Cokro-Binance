@@ -22,15 +22,18 @@ func TimeToUnixMilliString(timeStr, timeZone string) string {
 		loc = time.UTC
 	}
 
-	// Parse as local time
+	// Parse waktu dengan location
 	t, err := time.ParseInLocation(layout, timeStr, loc)
 	if err != nil {
-		return ""
+		// Jika parsing gagal, coba parse sebagai UTC (untuk format +Z)
+		t, err = time.Parse(time.RFC3339, timeStr)
+		if err != nil {
+			return "" // atau log error
+		}
 	}
 
-	// Convert ke UTC (karena Binance pakai UTC)
+	// Konversi ke UTC karena Binance pakai UTC
 	utc := t.In(time.UTC)
-
 	return fmt.Sprintf("%d", utc.UnixMilli())
 }
 

@@ -33,8 +33,8 @@ func (s *MarketUsecaseImpl) GetBinanceAgregateTradeList(ctx context.Context, req
 	if timeZone == "" {
 		timeZone = "UTC"
 	}
-	req.StartTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.StartTime, req.TimeZone), req.TimeZone)
-	req.EndTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.EndTime, req.TimeZone), req.TimeZone)
+	req.StartTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.StartTime, timeZone), timeZone)
+	req.EndTime = convert.TimeToUnixMilliString(convert.NormalizeTimeString(req.EndTime, timeZone), timeZone)
 	results, err := s.repo.GetAgregateTradeList(ctx, req)
 	if err != nil {
 		return nil, err

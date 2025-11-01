@@ -7,14 +7,24 @@ func NormalizeTimeString(timeStr, timeZone string) string {
 		return ""
 	}
 
-	switch timeZone {
-	case "UTC":
-		if !strings.HasSuffix(timeStr, "Z") && !strings.Contains(timeStr, "+") && !strings.Contains(timeStr, "-") {
-			return timeStr + "Z"
+	if timeZone == "UTC" {
+		// Sudah ada 'Z' di akhir → return apa adanya
+		if strings.HasSuffix(timeStr, "Z") {
+			return timeStr
 		}
-	default:
-		// Untuk zona lain (Asia/Jakarta), biarkan seperti "2025-10-27T02:00:00"
+
+		// Sudah ada offset ±HH:MM di akhir → return apa adanya
+		if len(timeStr) >= 6 {
+			last6 := timeStr[len(timeStr)-6:]
+			if (last6[0] == '+' || last6[0] == '-') && last6[3] == ':' {
+				return timeStr
+			}
+		}
+
+		// Tambahkan Z kalau belum ada
+		return timeStr + "Z"
 	}
 
+	// Non-UTC → return apa adanya
 	return timeStr
 }
