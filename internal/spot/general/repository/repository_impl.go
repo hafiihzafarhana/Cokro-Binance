@@ -7,7 +7,8 @@ import (
 
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/general"
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/general/entity"
-	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/repository/model"
+	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/mapper"
+	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/model"
 	binance "github.com/hafiihzafarhana/Cokro-Binance/shared/httpclient/binancespot"
 )
 
@@ -28,5 +29,5 @@ func (r *GeneralRepositoryImpl) GetServerTime(ctx context.Context) (*entity.Gene
 	if err := json.Unmarshal(resp, &model); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
-	return model.ToServerTimeEntity(), nil
+	return mapper.ToServerTimeEntity(model), nil
 }

@@ -1,8 +1,6 @@
 package general
 
 import (
-	"context"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/usecase"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/response"
@@ -26,7 +24,7 @@ func NewGeneralController(usecase usecase.MarketUsecaseInterface) GeneralControl
 // @Produce json
 // @Router /general/server-time [get]
 func (g *GeneralController) CheckServerTime(c *fiber.Ctx) error {
-	data, err := g.usecase.GetServerTime(context.Background())
+	data, err := g.usecase.GetServerTime(c.UserContext())
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
