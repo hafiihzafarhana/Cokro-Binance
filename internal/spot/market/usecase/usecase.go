@@ -14,5 +14,6 @@ type MarketUseCaseInterface interface {
 	GetBinanceAgregateTradeList(ctx context.Context, data *market.GetAgregateTradeListParams) ([]*entity.MarketAgregateTradeListEntity, error)
 	GetBinanceCandleStickData(ctx context.Context, data *market.GetCandleStickDataParams) ([]*entity.MarketCandleStickDataEntity, error)
 	GetBinanceCurrentAveragePrice(ctx context.Context, symbol string) (*entity.MarketCurrentAveragePriceEntity, error)
-	GetBinancePriceChange24hr(ctx context.Context, data *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error)
+	GetBinanceTickerPrice24hr(ctx context.Context, data *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error)
+	GetBinanceTradingDayTicker(ctx context.Context, data *market.GetTradingDayTickerParams) ([]*entity.MarketTradingDayTickerEntity, error)
 }

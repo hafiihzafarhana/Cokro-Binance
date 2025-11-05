@@ -32,6 +32,9 @@ func (m *mockMarketController) CheckBinanceCurrentAveragePrice(c *fiber.Ctx) err
 func (m *mockMarketController) CheckBinancePriceChange24hr(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).SendString("price-change ok")
 }
+func (m *mockMarketController) CheckBinanceTradingDayTicker(c *fiber.Ctx) error {
+	return c.Status(http.StatusOK).SendString("day-ticker ok")
+}
 
 func TestRegisterMarketRoutes(t *testing.T) {
 	app := fiber.New()
@@ -50,6 +53,7 @@ func TestRegisterMarketRoutes(t *testing.T) {
 		{"/market/candlestick-data", "candlestick ok"},
 		{"/market/current-average-price", "avg-price ok"},
 		{"/market/price-change-24hr", "price-change ok"},
+		{"/market/day-ticker", "day-ticker ok"},
 	}
 
 	for _, tt := range tests {

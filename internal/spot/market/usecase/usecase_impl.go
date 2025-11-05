@@ -58,6 +58,11 @@ func (s *MarketUsecaseImpl) GetBinanceCurrentAveragePrice(ctx context.Context, s
 	return s.repo.GetCurrentAveragePrice(ctx, symbol)
 }
 
-func (s *MarketUsecaseImpl) GetBinancePriceChange24hr(ctx context.Context, req *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error) {
+func (s *MarketUsecaseImpl) GetBinanceTickerPrice24hr(ctx context.Context, req *market.GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error) {
 	return s.repo.GetTickerPrice24hr(ctx, req)
+}
+
+func (s *MarketUsecaseImpl) GetBinanceTradingDayTicker(ctx context.Context, req *market.GetTradingDayTickerParams) ([]*entity.MarketTradingDayTickerEntity, error) {
+	req.TimeZone = convert.NormalizeTimeZone(req.TimeZone)
+	return s.repo.GetTradingDayTicker(ctx, req)
 }

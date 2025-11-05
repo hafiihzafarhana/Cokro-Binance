@@ -1,6 +1,8 @@
 package mapper
 
 import (
+	"fmt"
+
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market/entity"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/model"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/utils/convert"
@@ -107,5 +109,29 @@ func ToMarketTickerPrice24hrEntity(m model.GetTickerPrice24hrModel) *entity.Mark
 		BidQty:             stringdata.StringPtr(m.BidQty),
 		AskPrice:           stringdata.StringPtr(m.AskPrice),
 		AskQty:             stringdata.StringPtr(m.AskQty),
+	}
+}
+
+func ToMarketTradingDayTickerEntity(m model.GetTradingDayTickerModel) *entity.MarketTradingDayTickerEntity {
+	fmt.Println(convert.UnixToDateTimeString(m.CloseTime, "Asia/Jakarta"),)
+	return &entity.MarketTradingDayTickerEntity{
+		Symbol:      m.Symbol,
+		LastPrice:   m.LastPrice,
+		OpenPrice:   m.OpenPrice,
+		HighPrice:   m.HighPrice,
+		LowPrice:    m.LowPrice,
+		Volume:      m.Volume,
+		QuoteVolume: m.QuoteVolume,
+		OpenTime:    m.OpenTime,
+		OpenTimeStr: convert.UnixToDateTimeString(m.OpenTime, "Asia/Jakarta"),
+		CloseTime:   m.CloseTime,
+		CloseTimeStr: convert.UnixToDateTimeString(m.CloseTime, "Asia/Jakarta"),
+		FirstId:     m.FirstId,
+		LastId:      m.LastId,
+		Count:       m.Count,
+
+		PriceChange:        stringdata.StringPtr(m.PriceChange),
+		PriceChangePercent: stringdata.StringPtr(m.PriceChangePercent),
+		WeightedAvgPrice:   stringdata.StringPtr(m.WeightedAvgPrice),
 	}
 }

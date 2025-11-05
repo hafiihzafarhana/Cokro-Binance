@@ -35,3 +35,24 @@ type MarketPriceChange24hrResponse struct {
 	AskPrice           *string `json:"askPrice,omitempty"`
 	AskQty             *string `json:"askQty,omitempty"`
 }
+
+type MarketTradingDayTickerResponse struct {
+	Symbol             string `json:"symbol"`
+	OpenPrice          string `json:"openPrice"`
+	HighPrice          string `json:"highPrice"`
+	LowPrice           string `json:"lowPrice"`
+	LastPrice          string `json:"lastPrice"`
+	Volume             string `json:"volume"`
+	QuoteVolume        string `json:"quoteVolume"`
+	OpenTime           int64 `json:"openTime"`
+	OpenTimeStr		   string `json:"openTimeStr"`
+	CloseTime          int64 `json:"closeTime"`
+	CloseTimeStr	   string `json:"closeTimeStr"`
+	FirstId            int64 `json:"firstId"`
+	LastId             int64 `json:"lastId"`
+	Count              int64 `json:"count"`
+
+	PriceChange        *string `json:"priceChange,omitempty"`
+	PriceChangePercent *string `json:"priceChangePercent,omitempty"`
+	WeightedAvgPrice   *string `json:"weightedAvgPrice,omitempty"`
+}

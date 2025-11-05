@@ -32,3 +32,10 @@ type GetPriceChange24hrParams struct {
 	Type string
 	SymbolStatus string
 }
+
+type GetTradingDayTickerParams struct {
+	Symbol string
+	Type string
+	SymbolStatus string
+	TimeZone string
+}

@@ -51,6 +51,10 @@ func (m *mockMarketRepository) GetTickerPrice24hr(ctx context.Context, req *mark
 	return args.Get(0).([]*entity.MarketTickerPrice24hrEntity), args.Error(1)
 }
 
+func (m *mockMarketRepository) GetTradingDayTicker(ctx context.Context, req *market.GetTradingDayTickerParams) ([]*entity.MarketTradingDayTickerEntity, error) {
+	return nil, nil
+}
+
 func TestNewMarketUsecase(t *testing.T) {
 	repo := new(mockMarketRepository)
 	uc := NewMarketUsecase(repo)
@@ -378,7 +382,7 @@ func TestGetBinancePriceChange24hr_Success(t *testing.T) {
 		repo: mockRepo,
 	}
 
-	result, err := usecase.GetBinancePriceChange24hr(ctx, req)
+	result, err := usecase.GetBinanceTickerPrice24hr(ctx, req)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedData, result)

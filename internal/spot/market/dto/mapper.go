@@ -38,3 +38,33 @@ func ToMarketTickerPrice24hrResponseList(list []*entity.MarketTickerPrice24hrEnt
 	}
 	return resp
 }
+
+func ToMarketTradingDayTickerResponse(e *entity.MarketTradingDayTickerEntity) *MarketTradingDayTickerResponse {
+	return &MarketTradingDayTickerResponse{
+		Symbol:             e.Symbol,
+		LastPrice:          e.LastPrice,
+		OpenPrice:          e.OpenPrice,
+		HighPrice:          e.HighPrice,
+		LowPrice:           e.LowPrice,
+		Volume:             e.Volume,
+		QuoteVolume:        e.QuoteVolume,
+		OpenTime:           e.OpenTime,
+		OpenTimeStr: 		e.OpenTimeStr,	
+		CloseTime:          e.CloseTime,
+		CloseTimeStr: 		e.CloseTimeStr,
+		FirstId:            e.FirstId,
+		LastId:             e.LastId,
+		Count:              e.Count,
+		PriceChange:        stringdata.ToNilIfEmpty(e.PriceChange),
+		PriceChangePercent: stringdata.ToNilIfEmpty(e.PriceChangePercent),
+		WeightedAvgPrice:   stringdata.ToNilIfEmpty(e.WeightedAvgPrice),
+	}
+}
+
+func ToMarketTradingDayTickerResponseList(list []*entity.MarketTradingDayTickerEntity) []*MarketTradingDayTickerResponse {
+	resp := make([]*MarketTradingDayTickerResponse, 0, len(list))
+	for _, e := range list {
+		resp = append(resp, ToMarketTradingDayTickerResponse(e))
+	}
+	return resp
+}

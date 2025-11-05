@@ -234,12 +234,48 @@ func (m *MarketController) CheckBinancePriceChange24hr(c *fiber.Ctx) error {
 		SymbolStatus: q.SymbolStatus,
 	}
 
-	data, err := m.usecase.GetBinancePriceChange24hr(c.UserContext(), &params)
+	data, err := m.usecase.GetBinanceTickerPrice24hr(c.UserContext(), &params)
 	if err != nil {
 		return response.SendStatusInternalServerError(c, err.Error())
 	}
 
 	respData := dto.ToMarketTickerPrice24hrResponseList(data)
+
+	return response.SendStatusOkWithDataResponse(c, "Data Ok", respData)
+}
+
+// CheckBinanceTradingDayTicker godoc
+// @Summary Get 1 day ticker price change statistics
+// @Description Get 1 day price change statistics (similar to Binance /ticker/tradingDay endpoint)
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Param symbol query string true "Trading pair symbol (e.g. BTCUSDT, ETHUSDT, or multiple: BTCUSDT,ETHUSDT)"
+// @Param type query string false "Type of request (optional, e.g. FULL, MINI)"
+// @Param timeZone query string false "Time zone (default: UTC)"
+// @Param symbolStatus query string false "Filter by symbol status (TRADING, HALT, BREAK)"
+// @Router /market/day-ticker [get]
+func (m *MarketController) CheckBinanceTradingDayTicker(c *fiber.Ctx) error {
+	var q dto.GetTradingDayTickerParams
+	if err := c.QueryParser(&q); err != nil {
+		return response.SendStatusBadRequest(c, "invalid query: "+err.Error())
+	}
+	if err := validator.ValidateStruct(q); err != nil {
+		return response.SendStatusBadRequest(c, "error validating payload:"+err.Error())
+	}
+	params := market.GetTradingDayTickerParams{
+		Symbol:      q.Symbol,
+		Type:       q.Type,
+		SymbolStatus: q.SymbolStatus,
+		TimeZone: q.TimeZone,
+	}
+
+	data, err := m.usecase.GetBinanceTradingDayTicker(c.UserContext(), &params)
+	if err != nil {
+		return response.SendStatusInternalServerError(c, err.Error())
+	}
+
+	respData := dto.ToMarketTradingDayTickerResponseList(data)
 
 	return response.SendStatusOkWithDataResponse(c, "Data Ok", respData)
 }

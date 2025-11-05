@@ -32,3 +32,10 @@ type GetPriceChange24hrParams struct {
 	Type       string   `query:"type" validate:"omitempty,oneof=FULL MINI"`
 	SymbolStatus string  `query:"symbolStatus" validate:"omitempty,oneof=TRADING HALT BREAK"`
 }
+
+type GetTradingDayTickerParams struct {
+	Symbol      string   `query:"symbol" validate:"required,uppercase"`
+	Type       string   `query:"type" validate:"omitempty,oneof=FULL MINI"`
+	SymbolStatus string  `query:"symbolStatus" validate:"omitempty,oneof=TRADING HALT BREAK"`
+	TimeZone  string `query:"timeZone" validate:"omitempty"`
+}

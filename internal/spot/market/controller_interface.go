@@ -10,4 +10,5 @@ type MarketControllerInterface interface {
 	CheckBinanceCandleStickData(c *fiber.Ctx) error
 	CheckBinanceCurrentAveragePrice(c *fiber.Ctx) error
 	CheckBinancePriceChange24hr(c *fiber.Ctx) error
+	CheckBinanceTradingDayTicker(c *fiber.Ctx) error
 }

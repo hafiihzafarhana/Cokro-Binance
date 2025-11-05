@@ -14,4 +14,5 @@ type MarketRepository interface {
 	GetCandleStickData(ctx context.Context, params *GetCandleStickDataParams) ([]*entity.MarketCandleStickDataEntity, error)
 	GetCurrentAveragePrice(ctx context.Context, symbol string) (*entity.MarketCurrentAveragePriceEntity, error)
 	GetTickerPrice24hr(ctx context.Context, params *GetPriceChange24hrParams) ([]*entity.MarketTickerPrice24hrEntity, error)
+	GetTradingDayTicker(ctx context.Context, params *GetTradingDayTickerParams) ([]*entity.MarketTradingDayTickerEntity, error)
 }

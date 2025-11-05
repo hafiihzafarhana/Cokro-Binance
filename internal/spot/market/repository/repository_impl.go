@@ -250,3 +250,54 @@ func (r *MarketRepositoryImpl) GetTickerPrice24hr(ctx context.Context, params *m
 	return results, nil
 }
 
+func (r *MarketRepositoryImpl) GetTradingDayTicker(ctx context.Context, params *market.GetTradingDayTickerParams) ([]*entity.MarketTradingDayTickerEntity, error) {
+	splitSymbol := arraydata.SplitAndTrim(params.Symbol, ",")
+    if len(splitSymbol) == 0 {
+        return nil, fmt.Errorf("no symbol provided")
+    }
+
+	paramsQ := url.Values{}
+    if len(splitSymbol) > 1 {
+        jsonSymbols, _ := json.Marshal(splitSymbol)
+        paramsQ.Add("symbols", string(jsonSymbols))
+    } else {
+        paramsQ.Add("symbol", splitSymbol[0])
+    }
+
+	if params.Type != "" {
+        paramsQ.Add("type", params.Type)
+    }
+    if params.SymbolStatus != "" {
+        paramsQ.Add("symbolStatus", params.SymbolStatus)
+    }
+	if params.TimeZone != "" {
+		paramsQ.Add("timeZone", params.TimeZone)
+	}
+
+	endpoint := fmt.Sprintf("/ticker/tradingDay?%s", paramsQ.Encode())
+
+    resp, err := r.client.Get(ctx, endpoint)
+    if err != nil {
+        return nil, err
+    }
+
+	var results []*entity.MarketTradingDayTickerEntity
+
+	if len(splitSymbol) > 1 {
+		var rawList []model.GetTradingDayTickerModel
+		if err := json.Unmarshal(resp, &rawList); err != nil {
+			return nil, fmt.Errorf("failed to parse multi response: %w", err)
+		}
+		for _, raw := range rawList {
+			results = append(results, mapper.ToMarketTradingDayTickerEntity(raw))
+		}
+	} else {
+		var raw model.GetTradingDayTickerModel
+		if err := json.Unmarshal(resp, &raw); err != nil {
+			return nil, fmt.Errorf("failed to parse single response: %w", err)
+		}
+		results = append(results, mapper.ToMarketTradingDayTickerEntity(raw))
+	}
+
+	return results, nil
+}

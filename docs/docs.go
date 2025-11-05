@@ -193,6 +193,49 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/market/day-ticker": {
+            "get": {
+                "description": "Get 1 day price change statistics (similar to Binance /ticker/tradingDay endpoint)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Get 1 day ticker price change statistics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trading pair symbol (e.g. BTCUSDT, ETHUSDT, or multiple: BTCUSDT,ETHUSDT)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Type of request (optional, e.g. FULL, MINI)",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Time zone (default: UTC)",
+                        "name": "timeZone",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by symbol status (TRADING, HALT, BREAK)",
+                        "name": "symbolStatus",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/market/old-trade-lookup": {
             "get": {
                 "description": "Check old trade lookup from Binance API",
