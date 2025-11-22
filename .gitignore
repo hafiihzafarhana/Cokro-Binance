@@ -30,3 +30,8 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+structuring.md
+struct.md
+market_features_100 - market_features_100.csv
+model_structure.md
