@@ -1,8 +1,6 @@
 package mapper
 
 import (
-	"fmt"
-
 	"github.com/hafiihzafarhana/Cokro-Binance/domain/spot/market/entity"
 	"github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/model"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/utils/convert"
@@ -113,7 +111,6 @@ func ToMarketTickerPrice24hrEntity(m model.GetTickerPrice24hrModel) *entity.Mark
 }
 
 func ToMarketTradingDayTickerEntity(m model.GetTradingDayTickerModel) *entity.MarketTradingDayTickerEntity {
-	fmt.Println(convert.UnixToDateTimeString(m.CloseTime, "Asia/Jakarta"),)
 	return &entity.MarketTradingDayTickerEntity{
 		Symbol:      m.Symbol,
 		LastPrice:   m.LastPrice,

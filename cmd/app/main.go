@@ -13,6 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/hafiihzafarhana/Cokro-Binance/config"
 	_ "github.com/hafiihzafarhana/Cokro-Binance/docs"
+	bExporter "github.com/hafiihzafarhana/Cokro-Binance/internal/spot/exporter/bootstrap"
 	bGeneral "github.com/hafiihzafarhana/Cokro-Binance/internal/spot/general/bootstrap"
 	bMarket "github.com/hafiihzafarhana/Cokro-Binance/internal/spot/market/bootstrap"
 	"github.com/hafiihzafarhana/Cokro-Binance/shared/middleware/logging"
@@ -46,6 +47,7 @@ func main() {
 
 	bGeneral.SetupSpotGeneralModule(app)
 	bMarket.SetupSpotMarketModule(app)
+	bExporter.SetupSpotExporterModule(app)
 
 	addr := fmt.Sprintf(":%d", bootConfig.AppPort)
 	if err := app.Listen(addr); err != nil {

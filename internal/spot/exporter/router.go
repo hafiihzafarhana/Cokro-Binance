@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func RegisterGeneralRoutes(app *fiber.App, handler ExporterControllerInterface) {
-	generalGroup := app.Group("/exporter")
-	generalGroup.Get("/candlestick-data", handler.ExportBinanceCandleStickData)
+func RegisterExporterRoutes(app *fiber.App, handler ExporterControllerInterface) {
+	exporterGroup := app.Group("/exporter")
+	exporterGroup.Get("/candlestick-data", handler.ExportBinanceCandleStickData)
 }

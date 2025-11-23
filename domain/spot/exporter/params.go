@@ -10,4 +10,6 @@ type GetCandleStickDataParams struct {
 	Interval string
 	StartTime string
 	EndTime   string
+	TypeKline string
+	TimeZone  string
 }
